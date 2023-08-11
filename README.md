@@ -1,2 +1,2 @@
 # uwaterloo-misc
-shortcuts for things uwaterloo
+watcard chrome ext
