@@ -1,8 +1,9 @@
 import requests
 import argparse
 from bs4 import BeautifulSoup
+import pandas as pd
 
-from balances import basic_balance_data
+from balances import basic_balance_data, full_balance_data
 from login_utils import get_login_data
 
 def main():
@@ -22,7 +23,11 @@ def main():
         r = s.get(url)
         login_data = get_login_data(r,url,login_data,s)
         r = s.post(url, data=login_data)
-        basic_balance_data(r,s)
+        bal = basic_balance_data(r,s)
+        #print(bal)
+        detail_bal = full_balance_data(r,s)
+        #print(detail_bal)
+    
 
 
 if __name__ == "__main__":
@@ -35,6 +40,6 @@ if __name__ == "__main__":
     #see where things are bought (building + store/restaurant)
 #get basic personal info + contact info
 #change password 
-#make into a chrome extension 
+#connect to frontend using streamlit
 
     
