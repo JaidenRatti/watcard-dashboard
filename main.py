@@ -3,6 +3,7 @@ import argparse
 from bs4 import BeautifulSoup
 import pandas as pd
 import streamlit as st
+from PIL import Image
 
 from balances import basic_balance_data, full_balance_data
 from login_utils import get_user_input, login
@@ -18,12 +19,14 @@ def display_results(personal_info,r,s):
     bal = basic_balance_data(r,s)
     st.metric("WatCard Balance :dollar:",bal)
     detail_bal = full_balance_data(r,s)
-    st.dataframe(detail_bal, column_config = st.column_config.NumberColumn("Dollar Values",format="$ %d"))
+    detail_bal.T
     #confirmation = changepwd(r,s,args.pwd)
     #print(confirmation)
     #starter = get_interval_data(r,s)
 
 def main():
+    image = Image.open('logo.png')
+    st.image(image)
     st.title("WatCard Dashboard")
     while True:
         number = st.text_input("Enter Student Number")
