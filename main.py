@@ -4,8 +4,9 @@ from bs4 import BeautifulSoup
 import pandas as pd
 
 from balances import basic_balance_data, full_balance_data
-from login_utils import get_user_input, login, get_login_data, get_personal_info
+from login_utils import get_user_input, login
 from password import changepwd
+from transactions import get_interval_data
 
 
 def display_results(personal_info,r,s):
@@ -16,6 +17,7 @@ def display_results(personal_info,r,s):
     print(detail_bal)
     #confirmation = changepwd(r,s,args.pwd)
     #print(confirmation)
+    starter = get_interval_data(r,s)
 
 def main():
     while True:
