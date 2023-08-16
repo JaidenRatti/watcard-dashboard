@@ -47,4 +47,3 @@ def get_personal_info(r,s):
             "Email": lst[3]
         }
         return dct
-    

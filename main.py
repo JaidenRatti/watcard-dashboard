@@ -12,10 +12,11 @@ from transactions import get_interval_data
 
 
 def display_results(personal_info,r,s):
-
-    st.header(personal_info)
+    formatted = f":bust_in_silhouette: {personal_info['Name']}, 	:email: {personal_info['Email']}"
+    st.divider()
+    st.write(formatted)
     bal = basic_balance_data(r,s)
-    st.metric("WatCard Balance",bal)
+    st.metric("WatCard Balance :dollar:",bal)
     detail_bal = full_balance_data(r,s)
     st.dataframe(detail_bal, column_config = st.column_config.NumberColumn("Dollar Values",format="$ %d"))
     #confirmation = changepwd(r,s,args.pwd)
