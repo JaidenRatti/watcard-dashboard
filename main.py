@@ -4,29 +4,11 @@ from bs4 import BeautifulSoup
 import pandas as pd
 
 from balances import basic_balance_data, full_balance_data
-from login_utils import get_login_data, get_personal_info
+from login_utils import get_user_input, login, get_login_data, get_personal_info
 from password import changepwd
 
-def get_user_input():
-    ar = argparse.ArgumentParser()
-    ar.add_argument('-s', '--student_num',required=True,help="Input Student Number", type=int)
-    ar.add_argument('-p', '--pwd', required=True, help="Input Watcard Password",type=str)
-    args = ar.parse_args()
-    return args
 
-def main():
-    args = get_user_input()
-    url = "https://watcard.uwaterloo.ca/OneWeb/Account/LogOn"
-    login_data = {
-        'Account': args.student_num,
-        'Password': args.pwd
-    }
-
-    with requests.Session() as s:
-        r = s.get(url)
-        login_data = get_login_data(r,url,login_data,s)
-        r = s.post(url, data=login_data)
-        personal_info = get_personal_info(r,s)
+def display_results(personal_info,r,s):
     print(personal_info)
     bal = basic_balance_data(r,s)
     print(bal)
@@ -34,10 +16,21 @@ def main():
     print(detail_bal)
     #confirmation = changepwd(r,s,args.pwd)
     #print(confirmation)
-    
 
-    
+def main():
+    while True:
+        args = get_user_input()
+        personal_info,r,s = login(args)
 
+        if personal_info == 0:
+            #since status code is not reliable
+            print("Login Info Invalid. Restarting")
+            break
+        else:
+            print("Success!")
+        display_results(personal_info,r,s)
+        break
+        
 
 if __name__ == "__main__":
     main()

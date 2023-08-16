@@ -1,7 +1,29 @@
 import requests
 from bs4 import BeautifulSoup
+import argparse
 
-def get_login_data(r,url,login_data,s):
+def get_user_input():
+    ar = argparse.ArgumentParser()
+    ar.add_argument('-s', '--student_num',required=True,help="Input Student Number", type=int)
+    ar.add_argument('-p', '--pwd', required=True, help="Input Watcard Password",type=str)
+    args = ar.parse_args()
+    return args
+
+def login(args):
+    url = "https://watcard.uwaterloo.ca/OneWeb/Account/LogOn"
+    login_data = {
+        'Account': args.student_num,
+        'Password': args.pwd
+    }
+    with requests.Session() as s:
+        r = s.get(url)
+        login_data = get_login_data(r,login_data)
+        r = s.post(url, data=login_data)
+        personal_info = get_personal_info(r,s)
+    
+    return personal_info,r,s    
+
+def get_login_data(r,login_data):
     soup = BeautifulSoup(r.content, 'html5lib')
     #hidden login info
     login_data['__RequestVerificationToken'] = soup.find('input',attrs={'name': '__RequestVerificationToken'})['value']
