@@ -18,6 +18,7 @@ def display_results(personal_info,r,s):
     st.write(formatted)
     bal = basic_balance_data(r,s)
     st.metric("WatCard Balance :dollar:",bal)
+    st.caption("*Add Funds [Here](https://watcard.uwaterloo.ca/OneWebUW/addfunds_watiam.asp)*")
     detail_bal = full_balance_data(r,s)
     detail_bal.T
     #confirmation = changepwd(r,s,args.pwd)
