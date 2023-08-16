@@ -1,4 +1,8 @@
 # uwaterloo-misc
-personal watcard data within terminal
+personal watcard data within terminal (for now)
 
-see main.py for upcoming features
+current features:
+- view personal information
+- view total balance
+- view credit/amts for specific sub-balances
+- change watcard password
