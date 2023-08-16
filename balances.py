@@ -22,7 +22,8 @@ def full_balance_data(r,s):
         pair = [data[i], data[i+1]]
         pairs_list.append(pair)
 
-    temp = ['Residence Plan','Super Saver MP','Saver MP','Casual MP','Flexible','Flexible','Transfer MP','Dons Meal Allow','Dons Flex','Unallocated','Dept Charge','Overdraft']
+    print(pairs_list)
+    temp = ['','Residence Plan','Super Saver MP','Saver MP','Casual MP','Flexible ','Flexible','Transfer MP','Dons Meal Allow','Dons Flex','Unallocated','Dept Charge','Overdraft']
     #just for now since parsing this is strange
     name_dict = dict(zip(temp, pairs_list))
     return pd.DataFrame.from_dict(name_dict, orient='index')
