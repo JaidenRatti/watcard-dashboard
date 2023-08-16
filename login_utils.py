@@ -9,11 +9,11 @@ def get_user_input():
     args = ar.parse_args()
     return args
 
-def login(args):
+def login(user,pwd):
     url = "https://watcard.uwaterloo.ca/OneWeb/Account/LogOn"
     login_data = {
-        'Account': args.student_num,
-        'Password': args.pwd
+        'Account': user,
+        'Password': pwd
     }
     with requests.Session() as s:
         r = s.get(url)

@@ -25,6 +25,9 @@ def full_balance_data(r,s):
     temp = ['','Residence Plan','Super Saver MP','Saver MP','Casual MP','Flexible ','Flexible','Transfer MP','Dons Meal Allow','Dons Flex','Unallocated','Dept Charge','Overdraft']
     #just for now since parsing this is strange
     name_dict = dict(zip(temp, pairs_list))
-    return pd.DataFrame.from_dict(name_dict, orient='index')
+    df = pd.DataFrame.from_dict(name_dict,orient="index")
+    df.columns =df.iloc[0]
+    df = df[1:]
+    return df
     
 
