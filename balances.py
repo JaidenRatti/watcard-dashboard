@@ -31,3 +31,4 @@ def full_balance_data(r,s):
     return df
     
 
+#display mealplan vs flex balances (since these are main ones for students)
