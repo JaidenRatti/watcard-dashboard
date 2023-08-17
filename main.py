@@ -6,7 +6,7 @@ import streamlit as st
 from PIL import Image
 
 from balances import basic_balance_data, full_balance_data
-from login_utils import get_user_input, login
+from login_utils import login
 from password import changepwd
 from transactions import get_interval_data
 
@@ -23,7 +23,7 @@ def display_results(personal_info,r,s):
     detail_bal.T
     #confirmation = changepwd(r,s,args.pwd)
     #print(confirmation)
-    #starter = get_interval_data(r,s)
+    starter = get_interval_data(r,s)
 
 def main():
     image = Image.open('logo.png')

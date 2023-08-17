@@ -4,6 +4,8 @@ from bs4 import BeautifulSoup
 import datetime
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
+import time
 
 def get_interval_data(r,s):
     url = "https://watcard.uwaterloo.ca/OneWeb/Financial/Transactions"
@@ -17,28 +19,35 @@ def get_interval_data(r,s):
     
     day = custom_interval_data(200)
     lst[0]['value'] = day
-    print(data)
 
-    
-    driver = webdriver.Chrome()
+    login_data = {}
+    login_data['__RequestVerificationToken'] = soup.find('input',attrs={'name': '__RequestVerificationToken'})['value']
+    response = s.post(url, data=login_data)
+    print(response.text)
+
+
+    options = Options()
+    options.add_argument("--headless")
+    driver = webdriver.Chrome(options=options)
 
     driver.get("https://watcard.uwaterloo.ca/OneWeb/Account/LogOn")
     inputel = driver.find_element(By.ID, "Account")
     inputel.send_keys('21002985')
     inputel = driver.find_element(By.ID, "Password")
-    inputel.send_keys("ma12vr21UW!!")
+    inputel.send_keys("hehe")
     inputel.submit()
 
     driver.get("https://watcard.uwaterloo.ca/OneWeb/Financial/Transactions")
-    button = driver.find_element(By.ID, "trans_search")
-    button.click()
-
-    #button_element = driver.find_element('class','btn ow-btn-primary btn-block-xs pull-right')
-    #button_element.click()
+    by_class = driver.find_element(By.ID,'trans_start_date')
+    by_class.clear()
+    by_class.send_keys(day)
+    button_element = driver.find_element(By.ID,'trans_search')
+    button_element.click()
     updated_content = driver.page_source
     print(updated_content)
-    
 
+    #keep tab open for long enough
+    
 
 
 def custom_interval_data(num):
