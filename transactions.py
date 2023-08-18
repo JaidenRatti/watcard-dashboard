@@ -36,7 +36,7 @@ def get_interval_data(r,s):
     inputel = driver.find_element(By.ID, "Account")
     inputel.send_keys('21002985')
     inputel = driver.find_element(By.ID, "Password")
-    inputel.send_keys("works")
+    inputel.send_keys("NOPE")
     inputel.submit()
 
     driver.get("https://watcard.uwaterloo.ca/OneWeb/Financial/Transactions")
@@ -50,9 +50,28 @@ def get_interval_data(r,s):
     wait = WebDriverWait(driver,10)
     new = wait.until(EC.presence_of_element_located((By.CLASS_NAME, "ow-table-responsive")))
     updated_content = driver.page_source
-    print(updated_content)
+
+    soup = BeautifulSoup(updated_content, 'html5lib')
+
+    table_body = soup.find('tbody')
+    rows = table_body = table_body.find_all('tr')
+
+    data_new = []
+
+    for row in rows:
+        cells = row.find_all('td')
+        date = cells[0].get_text()
+        amount = cells[1].get_text()
+        balance = cells[2].get_text()
+        units = cells[3].get_text()
+        trantype = cells[4].get_text()
+        terminal = cells[5].get_text()
+        data_new.append([date,amount,balance,units,trantype,terminal])
+
+    transaction_df = pd.DataFrame(data_new,columns=['Date','Amount','Balance','Units','Trantype','Terminal'])
+    print(transaction_df)
     time.sleep(400)
-    #keep tab open for long enough
+
     
 
 
