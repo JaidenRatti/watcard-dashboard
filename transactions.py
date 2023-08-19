@@ -2,12 +2,15 @@ import requests
 import pandas as pd
 from bs4 import BeautifulSoup
 import datetime
+import streamlit as st
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
+import matplotlib.pyplot as plt
+import plotly.express as px
 
 def get_interval_data(r,s):
     url = "https://watcard.uwaterloo.ca/OneWeb/Financial/Transactions"
@@ -19,7 +22,7 @@ def get_interval_data(r,s):
     for datum in data:
         lst.append(datum)
     
-    day = custom_interval_data(200)
+    day = custom_interval_data(400)
     lst[0]['value'] = day
 
     login_data = {}
@@ -29,14 +32,14 @@ def get_interval_data(r,s):
 
 
     options = Options()
-    #options.add_argument("--headless")
+    options.add_argument("--headless")
     driver = webdriver.Chrome(options=options)
 
     driver.get("https://watcard.uwaterloo.ca/OneWeb/Account/LogOn")
     inputel = driver.find_element(By.ID, "Account")
     inputel.send_keys('21002985')
     inputel = driver.find_element(By.ID, "Password")
-    inputel.send_keys("NOPE")
+    inputel.send_keys(";)")
     inputel.submit()
 
     driver.get("https://watcard.uwaterloo.ca/OneWeb/Financial/Transactions")
@@ -70,9 +73,21 @@ def get_interval_data(r,s):
 
     transaction_df = pd.DataFrame(data_new,columns=['Date','Amount','Balance','Units','Trantype','Terminal'])
     print(transaction_df)
-    time.sleep(400)
+    line_chart(transaction_df)
 
-    
+
+def line_chart(df):
+    df['Amount'] = df['Amount'].str.replace('[\$,]','',regex=True).astype(float)
+    df = df.iloc[::-1]
+    df['Running Balance'] = df['Amount'].cumsum()
+    df = df.iloc[::-1]
+    sub_df = df[['Date','Running Balance']].copy()
+    sub_df = sub_df.iloc[::-1].reset_index(drop=True)
+    print(sub_df)
+
+    fig = px.line(sub_df,x="Date",y="Running Balance")
+
+    st.plotly_chart(fig)
 
 
 def custom_interval_data(num):
@@ -90,7 +105,7 @@ def custom_interval_data(num):
 
 #chart of balance history 
 #mean expenditure per day (flex & meal plan) (make sure to only check negatives)
-#distribution of where money is spent (building / type)
+#distribution of where money is spent (type) pie chart
 #2,3,4 ,7 are potential mps
 #5,6,9 are flex
 #times of purchases
@@ -98,4 +113,6 @@ def custom_interval_data(num):
 #terminal
 #show vending machine VM_BUILDING (trantype is vend (money))
 #show fs FS-BUILDING (trantype is financial vend)
-#show building after fs
+#show building after fs  - you frequently buy things from x,y,z
+
+#heatmap for plotly of time purchases
