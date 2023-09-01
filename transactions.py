@@ -75,7 +75,6 @@ def get_interval_data(r,s, number, password):
     line_chart(transaction_df)
     avg_expend(transaction_df)
     freq_locations(transaction_df)
-    print(transaction_df)
     heatmap(transaction_df)
 
 def line_chart(df):
@@ -140,7 +139,6 @@ def freq_locations(df):
 
 def heatmap(incoming_df):
     df = incoming_df[(incoming_df['Amount'] < 0) & (~incoming_df['Trantype'].str.startswith('136'))]
-    print(df)
 
     #fig = px.imshow(data,labels=dict(x="Day of Week",y="Time of Day"),
     #x=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
@@ -158,7 +156,7 @@ def heatmap(incoming_df):
     #midnight = 0
 
     grouped = df.groupby(['day_of_week','hour'])['Amount'].sum().reset_index()
-    print(grouped)
+    #print(grouped)
 
     day_index = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
 
@@ -171,14 +169,29 @@ def heatmap(incoming_df):
 
         merge_df['Amount'].fillna(0,inplace=True)
         new_df = pd.concat([new_df,merge_df],ignore_index=True)
-    print(new_df)
 
-    hour_amounts = []
 
-    #fig = px.imshow(data,labels=dict(x="day of week",y="time of day"),
-    #x=order,
-    #y=['00','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23'])
-    #st.plotly_chart(fig)
+    hourly_amount_arrays = []
+
+    for hour in range(24):
+
+        hour_df = new_df[new_df['hour']==hour]
+
+        hour_amount_array = []
+        for day in day_index:
+            amount = abs(hour_df[hour_df['day_of_week'] == day]['Amount'].values)
+            hour_amount_array.append(amount[0])
+
+        hourly_amount_arrays.append(hour_amount_array)
+
+    reverse = hourly_amount_arrays[::-1]
+    hours = [f"{str(i).zfill(2)}:00" for i in range(23,-1,-1)]
+
+    fig = px.imshow(reverse,labels=dict(x="day of week",y="time of day"),
+    x=day_index,
+    y=hours)
+    st.header("Spending / Date+Time Heatmap :alarm_clock:")
+    st.plotly_chart(fig, use_container_width=False,theme="streamlit")
 
 
 
