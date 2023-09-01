@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
+import plotly.express as px
 
 def basic_balance_data(r,s):
     r = s.get("https://watcard.uwaterloo.ca/OneWeb/Financial/Balances")
@@ -40,7 +41,6 @@ def pie_chart(df):
     flex = df['Amount'][4] + df['Amount'][5] + df['Amount'][8]
     values = [mp,flex]
     names = 'Meal Plan','Flex'
-    fig, ax = plt.subplots()
-    ax.pie(values,labels=names, colors=['#0175a4','#72adcf'], wedgeprops= {"linewidth": 1,"edgecolor":"white"},autopct = '%1.1f%%')
-    st.header("Meal Plan vs Flex Breakdown :pie:")
-    st.pyplot(fig, use_container_width=True)
+    fig = px.pie(values=values,names=names)
+    st.header("Meal Plan vs Flex :pie:")
+    st.plotly_chart(fig,theme="streamlit")

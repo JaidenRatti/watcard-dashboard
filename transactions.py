@@ -76,7 +76,9 @@ def get_interval_data(r,s, number, password):
     line_chart(transaction_df)
     avg_expend(transaction_df)
     freq_locations(transaction_df)
-    #print(transaction_df)
+    print(transaction_df)
+    #heatmap(transaction_df)
+
 
 
 
@@ -135,4 +137,50 @@ def freq_locations(df):
     simplify.loc[simplify['Building'] == 'UWP', 'Building'] += '/CMH'
     st.header("Food Spending per Building Breakdown :takeout_box:")
     st.bar_chart(simplify,x="Building",y="Amount")
+
+
+
+def heatmap(incoming_df):
+    df = incoming_df[(incoming_df['Amount'] < 0) & (~incoming_df['Trantype'].str.startswith('136'))]
+    print(df)
+
+    #fig = px.imshow(data,labels=dict(x="Day of Week",y="Time of Day"),
+    #x=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
+    #y=['00','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23'])
+    #st.plotly_chart(fig)
+
+
+    df['Date'] = pd.to_datetime(df['Date'])
+
+    df['day_of_week'] = df['Date'].dt.day_name()
+    df['hour'] = df['Date'].dt.hour
+
+    grouped = df.groupby(['day_of_week','hour'])['Amount'].sum().reset_index()
+    
+    result_pivot = grouped.pivot(index='hour', columns='day_of_week', values='Amount').fillna(0)
+
+    order = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
+
+    r = result_pivot[order].values.tolist()
+
+    print(r)
+    print(len(r))
+
+    data = r[:24]
+    
+
+    fig = px.imshow(data,labels=dict(x="day of week",y="time of day"),
+    x=order,
+    y=['00','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23'])
+    st.plotly_chart(fig)
+
+
+
+
+
+
+
+
+
+
 
