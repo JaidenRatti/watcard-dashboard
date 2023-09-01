@@ -2,13 +2,6 @@ import requests
 from bs4 import BeautifulSoup
 import argparse
 
-def get_user_input():
-    ar = argparse.ArgumentParser()
-    ar.add_argument('-s', '--student_num',required=True,help="Input Student Number", type=int)
-    ar.add_argument('-p', '--pwd', required=True, help="Input Watcard Password",type=str)
-    args = ar.parse_args()
-    return args
-
 def login(user,pwd):
     url = "https://watcard.uwaterloo.ca/OneWeb/Account/LogOn"
     login_data = {

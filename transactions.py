@@ -28,7 +28,6 @@ def get_interval_data(r,s, number, password):
     login_data = {}
     login_data['__RequestVerificationToken'] = soup.find('input',attrs={'name': '__RequestVerificationToken'})['value']
     response = s.post(url, data=login_data)
-    #print(response.text)
 
     options = Options()
     options.add_argument("--headless")
@@ -71,7 +70,6 @@ def get_interval_data(r,s, number, password):
         data_new.append([date,amount,balance,units,trantype,terminal])
 
     transaction_df = pd.DataFrame(data_new,columns=['Date','Amount','Balance','Units','Trantype','Terminal'])
-    #print(transaction_df)
     line_chart(transaction_df)
     avg_expend(transaction_df)
     freq_locations(transaction_df)
@@ -106,7 +104,6 @@ def custom_interval_data(num):
 def avg_expend(df):
     #exclude the major balance transfers that waterloo adds
     negative_df = df[(df['Amount'] < 0) & (~df['Trantype'].str.startswith('136'))]
-    #print(negative_df)
     mean = round(abs(negative_df['Amount'].mean()),2)
     col1, col2, col3 = st.columns(3)
     with col1:
@@ -116,8 +113,9 @@ def avg_expend(df):
         st.metric("Median Daily Expenditure",f'${median}')
     sum = round(abs(negative_df['Amount'].sum()),2)
     with col3:
-        st.metric("Total Expenditure",f'${sum}')
+        st.metric("Total Expenditure",f'${sum:.2f}')
 
+    st.divider()
 
 def freq_locations(df):
     #where you buy things from 
@@ -140,23 +138,12 @@ def freq_locations(df):
 def heatmap(incoming_df):
     df = incoming_df[(incoming_df['Amount'] < 0) & (~incoming_df['Trantype'].str.startswith('136'))]
 
-    #fig = px.imshow(data,labels=dict(x="Day of Week",y="Time of Day"),
-    #x=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
-    #y=['00','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23'])
-    #st.plotly_chart(fig)
-
-
     df['Date'] = pd.to_datetime(df['Date'])
 
-    #print(df['Date'])
-
     df['day_of_week'] = df['Date'].dt.day_name()
-    #print(df['day_of_week'])
     df['hour'] = df['Date'].dt.hour
-    #midnight = 0
 
     grouped = df.groupby(['day_of_week','hour'])['Amount'].sum().reset_index()
-    #print(grouped)
 
     day_index = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
 
@@ -187,19 +174,9 @@ def heatmap(incoming_df):
     reverse = hourly_amount_arrays[::-1]
     hours = [f"{str(i).zfill(2)}:00" for i in range(23,-1,-1)]
 
-    fig = px.imshow(reverse,labels=dict(x="day of week",y="time of day"),
+    fig = px.imshow(reverse,labels=dict(x="Day of Week",y="Time of Day"),
     x=day_index,
     y=hours)
-    st.header("Spending / Date+Time Heatmap :alarm_clock:")
+    st.header("Spending & Time Heatmap :alarm_clock:")
     st.plotly_chart(fig, use_container_width=False,theme="streamlit")
-
-
-
-
-
-
-
-
-
-
 

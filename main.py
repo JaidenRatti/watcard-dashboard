@@ -23,8 +23,8 @@ def display_results(personal_info,r,s, number, password):
 
     get_interval_data(r,s, number, password)
 
-    #confirmation = changepwd(r,s,args.pwd)
-    #print(confirmation)
+    k = changepwd(r,s,password)
+    print(k)
     
 
 def main():
