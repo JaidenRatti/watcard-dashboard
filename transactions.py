@@ -12,7 +12,7 @@ import time
 import matplotlib.pyplot as plt
 import plotly.express as px
 
-def get_interval_data(r,s):
+def get_interval_data(r,s, number, password):
     url = "https://watcard.uwaterloo.ca/OneWeb/Financial/Transactions"
     r = s.get(url)
     soup = BeautifulSoup(r.content, 'html5lib')
@@ -22,7 +22,7 @@ def get_interval_data(r,s):
     for datum in data:
         lst.append(datum)
     
-    day = custom_interval_data(400)
+    day = custom_interval_data(2000)
     lst[0]['value'] = day
 
     login_data = {}
@@ -37,9 +37,9 @@ def get_interval_data(r,s):
 
     driver.get("https://watcard.uwaterloo.ca/OneWeb/Account/LogOn")
     inputel = driver.find_element(By.ID, "Account")
-    inputel.send_keys('21002985')
+    inputel.send_keys(number)
     inputel = driver.find_element(By.ID, "Password")
-    inputel.send_keys(";)")
+    inputel.send_keys(password)
     inputel.submit()
 
     driver.get("https://watcard.uwaterloo.ca/OneWeb/Financial/Transactions")
@@ -74,6 +74,8 @@ def get_interval_data(r,s):
     transaction_df = pd.DataFrame(data_new,columns=['Date','Amount','Balance','Units','Trantype','Terminal'])
     print(transaction_df)
     line_chart(transaction_df)
+    avg_expend(transaction_df)
+    freq_locations(transaction_df)
 
 
 def line_chart(df):
@@ -83,7 +85,6 @@ def line_chart(df):
     df = df.iloc[::-1]
     sub_df = df[['Date','Running Balance']].copy()
     sub_df = sub_df.iloc[::-1].reset_index(drop=True)
-    print(sub_df)
 
     fig = px.line(sub_df,x="Date",y="Running Balance")
 
@@ -99,20 +100,42 @@ def custom_interval_data(num):
     return new
 
 
+def avg_expend(df):
+    #exclude the major balance transfers that waterloo adds
+    negative_df = df[(df['Amount'] < 0) & (~df['Trantype'].str.startswith('136'))]
+    print(negative_df)
+    mean = round(abs(negative_df['Amount'].mean()),2)
+    st.metric("Mean Expenditure",f'${mean}')
+    median = abs(negative_df['Amount'].median())
+    st.metric("Median Expenditure",f'${median}')
+
+
+def freq_locations(df):
+    #where you buy things from 
+    filtered = df[df['Terminal'].str.extract(r':\s(FS|VM)',expand=False).notnull()]
+    simplify = filtered[['Amount','Terminal']].copy()
+    simplify['extract_vm'] = df['Terminal'].str.extract(r'VM_(\w+)(?:_|$)',expand=False)
+    simplify['extract_fs'] = df['Terminal'].str.extract(r'FS-(\w+)',expand=False)
+
+    simplify['Building'] = simplify['extract_vm'].fillna(simplify['extract_fs'])
+
+    simplify.drop(['extract_vm','extract_fs','Terminal'],axis=1,inplace=True)
+
+    simplify['Amount'] = simplify['Amount'].abs()
+    simplify.loc[simplify['Building'] == 'UWP', 'Building'] += '/CMH'
+    st.header("Spending per Building Breakdown")
+    st.bar_chart(simplify,x="Building",y="Amount")
+
 
 
 #all features should work based on # of days user wants to see
 
-#chart of balance history 
-#mean expenditure per day (flex & meal plan) (make sure to only check negatives)
 #distribution of where money is spent (type) pie chart
 #2,3,4 ,7 are potential mps
 #5,6,9 are flex
 #times of purchases
 
 #terminal
-#show vending machine VM_BUILDING (trantype is vend (money))
+#show vending machine VM_BUILDING_ (trantype is vend (money))
 #show fs FS-BUILDING (trantype is financial vend)
 #show building after fs  - you frequently buy things from x,y,z
-
-#heatmap for plotly of time purchases

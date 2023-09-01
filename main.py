@@ -1,5 +1,3 @@
-import requests
-import argparse
 from bs4 import BeautifulSoup
 import pandas as pd
 import streamlit as st
@@ -12,7 +10,7 @@ from transactions import get_interval_data
 
 
 
-def display_results(personal_info,r,s):
+def display_results(personal_info,r,s, number, password):
     formatted = f":bust_in_silhouette: {personal_info['Name']}, 	:email: {personal_info['Email']}"
     st.divider()
     st.write(formatted)
@@ -23,7 +21,7 @@ def display_results(personal_info,r,s):
     detail_bal.T
     #confirmation = changepwd(r,s,args.pwd)
     #print(confirmation)
-    starter = get_interval_data(r,s)
+    starter = get_interval_data(r,s, number, password)
 
 def main():
     image = Image.open('logo.png')
@@ -41,7 +39,7 @@ def main():
                 break
             else:
                 print("Success!")
-                display_results(personal_info,r,s)
+                display_results(personal_info,r,s, number, password)
         break
     
         
