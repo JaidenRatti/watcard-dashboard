@@ -30,7 +30,6 @@ def get_interval_data(r,s, number, password):
     response = s.post(url, data=login_data)
     #print(response.text)
 
-
     options = Options()
     options.add_argument("--headless")
     driver = webdriver.Chrome(options=options)
@@ -77,11 +76,7 @@ def get_interval_data(r,s, number, password):
     avg_expend(transaction_df)
     freq_locations(transaction_df)
     print(transaction_df)
-    #heatmap(transaction_df)
-
-
-
-
+    heatmap(transaction_df)
 
 def line_chart(df):
     df['Amount'] = df['Amount'].str.replace('[\$,]','',regex=True).astype(float)
@@ -114,12 +109,15 @@ def avg_expend(df):
     negative_df = df[(df['Amount'] < 0) & (~df['Trantype'].str.startswith('136'))]
     #print(negative_df)
     mean = round(abs(negative_df['Amount'].mean()),2)
-    col1, col2 = st.columns(2)
+    col1, col2, col3 = st.columns(3)
     with col1:
         st.metric("Mean Daily Expenditure",f'${mean}')
     median = abs(negative_df['Amount'].median())
     with col2:
         st.metric("Median Daily Expenditure",f'${median}')
+    sum = round(abs(negative_df['Amount'].sum()),2)
+    with col3:
+        st.metric("Total Expenditure",f'${sum}')
 
 
 def freq_locations(df):
@@ -152,27 +150,35 @@ def heatmap(incoming_df):
 
     df['Date'] = pd.to_datetime(df['Date'])
 
+    #print(df['Date'])
+
     df['day_of_week'] = df['Date'].dt.day_name()
+    #print(df['day_of_week'])
     df['hour'] = df['Date'].dt.hour
+    #midnight = 0
 
     grouped = df.groupby(['day_of_week','hour'])['Amount'].sum().reset_index()
-    
-    result_pivot = grouped.pivot(index='hour', columns='day_of_week', values='Amount').fillna(0)
+    print(grouped)
 
-    order = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
+    day_index = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
 
-    r = result_pivot[order].values.tolist()
+    new_df = pd.DataFrame()
 
-    print(r)
-    print(len(r))
+    for day in day_index:
+        day_df = pd.DataFrame({'hour': range(24)})
+        day_df['day_of_week'] = day
+        merge_df = pd.merge(day_df, grouped, on=['day_of_week','hour'],how='left')
 
-    data = r[:24]
-    
+        merge_df['Amount'].fillna(0,inplace=True)
+        new_df = pd.concat([new_df,merge_df],ignore_index=True)
+    print(new_df)
 
-    fig = px.imshow(data,labels=dict(x="day of week",y="time of day"),
-    x=order,
-    y=['00','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23'])
-    st.plotly_chart(fig)
+    hour_amounts = []
+
+    #fig = px.imshow(data,labels=dict(x="day of week",y="time of day"),
+    #x=order,
+    #y=['00','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23'])
+    #st.plotly_chart(fig)
 
 
 
