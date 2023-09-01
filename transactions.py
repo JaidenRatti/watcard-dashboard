@@ -72,10 +72,13 @@ def get_interval_data(r,s, number, password):
         data_new.append([date,amount,balance,units,trantype,terminal])
 
     transaction_df = pd.DataFrame(data_new,columns=['Date','Amount','Balance','Units','Trantype','Terminal'])
-    print(transaction_df)
+    #print(transaction_df)
     line_chart(transaction_df)
     avg_expend(transaction_df)
     freq_locations(transaction_df)
+    #print(transaction_df)
+
+
 
 
 def line_chart(df):
@@ -86,7 +89,11 @@ def line_chart(df):
     sub_df = df[['Date','Running Balance']].copy()
     sub_df = sub_df.iloc[::-1].reset_index(drop=True)
 
+    sub_df['Date'] = pd.to_datetime(sub_df['Date']).dt.strftime("%m/%d/%Y")
+
     fig = px.line(sub_df,x="Date",y="Running Balance")
+
+    st.header("Running WatCard Balance :runner:")
 
     st.plotly_chart(fig)
 
@@ -103,11 +110,14 @@ def custom_interval_data(num):
 def avg_expend(df):
     #exclude the major balance transfers that waterloo adds
     negative_df = df[(df['Amount'] < 0) & (~df['Trantype'].str.startswith('136'))]
-    print(negative_df)
+    #print(negative_df)
     mean = round(abs(negative_df['Amount'].mean()),2)
-    st.metric("Mean Expenditure",f'${mean}')
+    col1, col2 = st.columns(2)
+    with col1:
+        st.metric("Mean Daily Expenditure",f'${mean}')
     median = abs(negative_df['Amount'].median())
-    st.metric("Median Expenditure",f'${median}')
+    with col2:
+        st.metric("Median Daily Expenditure",f'${median}')
 
 
 def freq_locations(df):
@@ -123,19 +133,6 @@ def freq_locations(df):
 
     simplify['Amount'] = simplify['Amount'].abs()
     simplify.loc[simplify['Building'] == 'UWP', 'Building'] += '/CMH'
-    st.header("Spending per Building Breakdown")
+    st.header("Food Spending per Building Breakdown :takeout_box:")
     st.bar_chart(simplify,x="Building",y="Amount")
 
-
-
-#all features should work based on # of days user wants to see
-
-#distribution of where money is spent (type) pie chart
-#2,3,4 ,7 are potential mps
-#5,6,9 are flex
-#times of purchases
-
-#terminal
-#show vending machine VM_BUILDING_ (trantype is vend (money))
-#show fs FS-BUILDING (trantype is financial vend)
-#show building after fs  - you frequently buy things from x,y,z

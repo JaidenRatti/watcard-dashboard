@@ -3,7 +3,7 @@ import pandas as pd
 import streamlit as st
 from PIL import Image
 
-from balances import basic_balance_data, full_balance_data
+from balances import basic_balance_data, full_balance_data, pie_chart
 from login_utils import login
 from password import changepwd
 from transactions import get_interval_data
@@ -16,12 +16,16 @@ def display_results(personal_info,r,s, number, password):
     st.write(formatted)
     bal = basic_balance_data(r,s)
     st.metric("WatCard Balance :dollar:",bal)
-    st.caption("*Add Funds [Here](https://watcard.uwaterloo.ca/OneWebUW/addfunds_watiam.asp)*")
+    st.caption("*Add Funds [Here](https://watcard.uwaterloo.ca/OneWebUW/addfunds_watiam.asp)*")   
     detail_bal = full_balance_data(r,s)
     detail_bal.T
+    pie_chart(detail_bal)
+
+    get_interval_data(r,s, number, password)
+
     #confirmation = changepwd(r,s,args.pwd)
     #print(confirmation)
-    starter = get_interval_data(r,s, number, password)
+    
 
 def main():
     image = Image.open('logo.png')
@@ -46,10 +50,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-#TODO
-#detailed transaction history 
-    #see where things are bought (building + store/restaurant)
-#connect to frontend using streamlit
-
     

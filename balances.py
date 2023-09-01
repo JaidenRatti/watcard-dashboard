@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+import matplotlib.pyplot as plt
+import streamlit as st
 
 def basic_balance_data(r,s):
     r = s.get("https://watcard.uwaterloo.ca/OneWeb/Financial/Balances")
@@ -29,6 +31,16 @@ def full_balance_data(r,s):
     df.columns =df.iloc[0]
     df = df[1:]
     return df
-    
 
 #display mealplan vs flex balances (since these are main ones for students)
+
+def pie_chart(df):
+    df['Amount'] = df['Amount'].str.replace('[\$,]','',regex=True).astype(float)
+    mp = df['Amount'][0] + df['Amount'][1] + df['Amount'][2] + df['Amount'][3] + df['Amount'][6]
+    flex = df['Amount'][4] + df['Amount'][5] + df['Amount'][8]
+    values = [mp,flex]
+    names = 'Meal Plan','Flex'
+    fig, ax = plt.subplots()
+    ax.pie(values,labels=names, colors=['#0175a4','#72adcf'], wedgeprops= {"linewidth": 1,"edgecolor":"white"},autopct = '%1.1f%%')
+    st.header("Meal Plan vs Flex Breakdown :pie:")
+    st.pyplot(fig, use_container_width=True)
