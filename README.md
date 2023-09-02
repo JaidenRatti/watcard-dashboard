@@ -1,5 +1,5 @@
 # watcard-dashboard
-personal watcard data dashboard (because this [website](https://watcard.uwaterloo.ca/OneWeb/Account/LogOn) isnt very good)
+personal watcard data dashboard (because this [website](https://watcard.uwaterloo.ca/OneWeb/Account/LogOn) is not very good)
 
 current features:
 - login via student # and pwd
