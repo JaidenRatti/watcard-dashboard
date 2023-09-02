@@ -6,7 +6,7 @@ personal watcard data dashboard (because this [website](https://watcard.uwaterlo
 
 I recommend watching this in 0.5x speed (github max file size is 10mb, hence the 3x speed)
 
-https://github.com/JaidenRatti/watcard-dashboard/assets/49047523/28e500c6-f907-42e3-900d-aa45d87948d6
+https://github.com/JaidenRatti/watcard-dashboard/assets/49047523/9b719d03-c8e2-4231-865e-61dff84e464b
 
 If video doesn't work, watch [here](https://youtu.be/izB-l1uGkSk)
 
