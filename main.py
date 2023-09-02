@@ -39,7 +39,6 @@ def main():
                 st.header("Login Info Invalid. Try Again")
                 break
             else:
-                print("Success!")
                 display_results(personal_info,r,s, number, password)
         break
     
