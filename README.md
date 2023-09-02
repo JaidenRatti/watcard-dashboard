@@ -8,6 +8,8 @@ I recommend watching this in 0.5x speed (github max file size is 10mb, hence the
 
 https://github.com/JaidenRatti/watcard-dashboard/assets/49047523/28e500c6-f907-42e3-900d-aa45d87948d6
 
+If video doesn't work, watch [here](https://youtu.be/izB-l1uGkSk)
+
 
 ## current features 
 - login via student # and current watcard pwd (keep in mind watcard pwd might not = your uwaterloo email pwd)
@@ -20,3 +22,4 @@ https://github.com/JaidenRatti/watcard-dashboard/assets/49047523/28e500c6-f907-4
 - spending & datetime heatmap
 - change your actual watcard password (currently available only in terminal)
 - compatible with different themes (e.g. dark mode and custom themes)
+(use on desktop)
