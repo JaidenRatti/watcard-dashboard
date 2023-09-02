@@ -6,3 +6,4 @@ requests
 selenium
 matplotlib
 html5lib
+chromedriver-py
