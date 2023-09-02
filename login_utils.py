@@ -1,6 +1,5 @@
 import requests
 from bs4 import BeautifulSoup
-import argparse
 
 def login(user,pwd):
     url = "https://watcard.uwaterloo.ca/OneWeb/Account/LogOn"

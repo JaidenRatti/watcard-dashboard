@@ -1,6 +1,4 @@
-import requests
 from bs4 import BeautifulSoup
-import streamlit as st
 
 def changepwd(r,s, old):
     r = s.get("https://watcard.uwaterloo.ca/OneWeb/Account/ChangePIN")
