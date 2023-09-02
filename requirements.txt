@@ -5,3 +5,4 @@ plotly
 requests
 selenium
 matplotlib
+html5lib
