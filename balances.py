@@ -33,7 +33,6 @@ def full_balance_data(r,s):
     df = df[1:]
     return df
 
-#display mealplan vs flex balances (since these are main ones for students)
 
 def pie_chart(df):
     df['Amount'] = df['Amount'].str.replace('[\$,]','',regex=True).astype(float)

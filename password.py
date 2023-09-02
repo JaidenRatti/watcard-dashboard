@@ -10,10 +10,8 @@ def changepwd(r,s, old):
     pwd_info['OldPIN'] = old
     key1 = 1
 
-
     while True:
         new_pwd = input("Enter New Password (Must follow rules)")
-        #button = st.button("Enter", key=key1 + 1)
         if new_pwd is not None:
             pwd_info['NewPIN'] = new_pwd
             pwd_info['RepeatNewPIN'] = pwd_info['NewPIN']

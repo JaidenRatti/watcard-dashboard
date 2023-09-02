@@ -1,4 +1,3 @@
-import requests
 import pandas as pd
 from bs4 import BeautifulSoup
 import datetime
@@ -8,7 +7,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import time
 import matplotlib.pyplot as plt
 import plotly.express as px
 
@@ -137,9 +135,7 @@ def freq_locations(df):
 
 def heatmap(incoming_df):
     df = incoming_df[(incoming_df['Amount'] < 0) & (~incoming_df['Trantype'].str.startswith('136'))]
-
     df['Date'] = pd.to_datetime(df['Date'])
-
     df['day_of_week'] = df['Date'].dt.day_name()
     df['hour'] = df['Date'].dt.hour
 
@@ -157,13 +153,10 @@ def heatmap(incoming_df):
         merge_df['Amount'].fillna(0,inplace=True)
         new_df = pd.concat([new_df,merge_df],ignore_index=True)
 
-
     hourly_amount_arrays = []
 
     for hour in range(24):
-
         hour_df = new_df[new_df['hour']==hour]
-
         hour_amount_array = []
         for day in day_index:
             amount = abs(hour_df[hour_df['day_of_week'] == day]['Amount'].values)
