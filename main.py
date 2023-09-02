@@ -22,10 +22,7 @@ def display_results(personal_info,r,s, number, password):
     pie_chart(detail_bal)
 
     get_interval_data(r,s, number, password)
-
-    k = changepwd(r,s,password)
-    print(k)
-    
+    changepwd(r,s,password)
 
 def main():
     image = Image.open('logo.png')
