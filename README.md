@@ -1,5 +1,5 @@
 # watcard-dashboard
-personal watcard data dashboard (because this [website](https://watcard.uwaterloo.ca/OneWeb/Account/LogOn) is not very good)
+personal watcard data dashboard (because this [website](https://watcard.uwaterloo.ca/OneWeb/Account/LogOn) is not very good). Use [here](https://watcard.streamlit.app/)
 
 
 ## demo
