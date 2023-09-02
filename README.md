@@ -23,3 +23,5 @@ If video doesn't work, watch [here](https://youtu.be/izB-l1uGkSk)
 - change your actual watcard password (currently available only in terminal)
 - compatible with different themes (e.g. dark mode and custom themes)
 (use on desktop)
+
+*not affiliated with uwaterloo
