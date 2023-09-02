@@ -9,5 +9,5 @@ current features:
 - running watcard balance
 - mean, median, totals
 - food spending per buildings
-- spending & time heatmap
-- change watcard password (only terminal)
+- spending & datetime heatmap
+- change actual watcard password (currently only terminal)
