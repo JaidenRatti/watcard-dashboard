@@ -25,3 +25,5 @@ If video doesn't work, watch [here](https://youtu.be/izB-l1uGkSk)
 (use on desktop)
 
 *not affiliated with uwaterloo
+
+Looks like they changed something on the main website, need to update.
