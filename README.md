@@ -1,6 +1,8 @@
 # watcard-dashboard
 watcard data dashboard (because this [website](https://watcard.uwaterloo.ca/OneWeb/Account/LogOn) is not very good). Use [here](https://watcard.streamlit.app/)
 
+Update, UWaterloo completely reconfigured their site. Project no longer works :(
+
 
 ## demo
 
